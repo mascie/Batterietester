@@ -28,13 +28,14 @@ input.onPinTouchEvent(TouchPin.P3, input.buttonEventDown(), function () {
         . . . . .
         `)
 })
+let Info = false
 let adc = 0
 let m1 = 0
 let m2 = 0
 let m3 = 0
+let Leerlauf = false
 let Spannung = 0
 let Analogwert = 0
-let Leerlauf = false
 basic.forever(function () {
     if (Spannung < 0.1) {
         Leerlauf = false
@@ -71,9 +72,6 @@ basic.forever(function () {
     }
 })
 basic.forever(function () {
-    if (m3 < 512) {
-    	
-    }
     m3 = m2
     m2 = m1
     m1 = pins.analogReadPin(AnalogPin.P0)
@@ -104,14 +102,26 @@ basic.forever(function () {
 })
 basic.forever(function () {
     if (Leerlauf) {
-        basic.pause(10000)
-        basic.showString(" Verbinde P0 mit Batterie ", 60)
-        basic.showLeds(`
-            . . # . .
-            . . # . .
-            # # # # #
-            . . # . .
-            . . # . .
-            `)
+        for (let index = 0; index <= 99; index++) {
+            basic.pause(100)
+            if (!(Leerlauf)) {
+                Info = false
+                break;
+            }
+            if (index == 99) {
+                Info = true
+            }
+        }
+        if (Info) {
+            basic.showString(" Verbinde P0 mit Batterie ", 60)
+            basic.showLeds(`
+                . . # . .
+                . . # . .
+                # # # # #
+                . . # . .
+                . . # . .
+                `)
+            Info = false
+        }
     }
 })
